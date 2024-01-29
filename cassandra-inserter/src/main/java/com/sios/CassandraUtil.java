@@ -8,7 +8,7 @@ import com.datastax.oss.driver.api.core.cql.*;
 public class CassandraUtil {
 
     private final CqlSession cqlSession;
-    File file = new File("/path/to/application.conf");
+    File file = new File(App.properties.getProperty("confFilePath"));
 
     public CassandraUtil(String keyspace) {
         // Cassandraの接続情報を設定

@@ -58,8 +58,21 @@ public class TestDataInserter {
             Instant created = Instant.now();
 
             // データを挿入
-            String insertCql = "INSERT INTO ? (datetime, value, timestamp) VALUES (?, ?, ?)";
-            cassandraUtil.insertData(insertCql, this.table, datetime, value, created);
+            // 以下のテーブルを想定
+            // CREATE TABLE IF NOT EXISTS test_ks.test_insert_tb (
+            // datetime TEXT,
+            // value TEXT,
+            // timestamp TIMESTAMP,
+            // PRIMARY KEY ((datetime), value)
+            // ) WITH CLUSTERING ORDER BY (value ASC)
+            // AND compression = {'chunk_length_kb': '64', 'cipher_algorithm':
+            // 'AES/CBC/PKCS5Padding', 'class':
+            // 'org.apache.cassandra.io.compress.EncryptingLZ4Compressor', 'secret_key_strength':
+            // 128, 'system_key_file': 'systemkey_ashono'} ;
+
+            String insertCql =
+                    "INSERT INTO " + this.table + " (datetime, value, timestamp) VALUES (?, ?, ?)";
+            cassandraUtil.insertData(insertCql, datetime, value, created);
         }
 
         cassandraUtil.closeSession();
