@@ -4,9 +4,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 import org.apache.commons.cli.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class App {
 
+    public static final Logger logger = LoggerFactory.getLogger(App.class);
     public static Properties properties = new Properties();
 
     public static void main(String[] args) {
@@ -27,38 +30,40 @@ public class App {
 
             // ファイルパスを表示
             if (propertiesFilePath != null) {
-                System.out.println("Properties File Path: " + propertiesFilePath);
+                logger.info("Properties File Path: " + propertiesFilePath);
                 // プロパティファイルを読み込む
                 try (FileInputStream fis = new FileInputStream(propertiesFilePath)) {
                     properties.load(fis);
                 } catch (IOException e) {
-                    System.err.println("Failed to load properties file: " + propertiesFilePath);
-                    e.printStackTrace();
+                    logger.error("Failed to load properties file: " + propertiesFilePath);
+                    logger.error(e.toString());
                     System.exit(1);
                 }
             }
 
             if (confFilePath != null) {
-                System.out.println("Conf File Path: " + confFilePath);
+                logger.info("Conf File Path: " + confFilePath);
                 properties.put("confFilePath", confFilePath);
             }
         } catch (ParseException e) {
-            System.err.println("Error parsing command line options: " + e.getMessage());
+            logger.error("Error parsing command line options: " + e.getMessage());
             System.exit(1);
         }
         // 読み込んだプロパティを表示
-        System.out.println("Value of 'confFilePath': " + properties.getProperty("confFilePath"));
-        System.out.println("Value of 'keyspace': " + properties.getProperty("keyspace"));
-        System.out.println("Value of 'table': " + properties.getProperty("table"));
-        System.out.println("Value of 'wait_sec': " + properties.getProperty("wait_sec"));
-        System.out.println("Value of 'record_num': " + properties.getProperty("record_num"));
-        System.out.println("Value of 'duration_sec': " + properties.getProperty("duration_sec"));
+        logger.info("Value of 'confFilePath': " + properties.getProperty("confFilePath"));
+        logger.info("Value of 'keyspace': " + properties.getProperty("keyspace"));
+        logger.info("Value of 'table': " + properties.getProperty("table"));
+        logger.info("Value of 'wait_sec': " + properties.getProperty("wait_sec"));
+        logger.info("Value of 'record_num': " + properties.getProperty("record_num"));
+        logger.info("Value of 'duration_sec': " + properties.getProperty("duration_sec"));
 
         new TestDataInserter(properties.getProperty("keyspace"), properties.getProperty("table"),
                 Integer.parseInt(properties.getProperty("wait_sec")),
                 Integer.parseInt(properties.getProperty("record_num")),
                 Integer.parseInt(properties.getProperty("duration_sec"))).execute();
 
+        new Evaluator(properties.getProperty("keyspace"), properties.getProperty("table"))
+                .execute();
         // プログラムの終了
         System.exit(0);
     }

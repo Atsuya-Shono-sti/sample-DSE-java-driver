@@ -2,13 +2,18 @@ package com.sios;
 
 import java.time.Instant;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestDataInserter {
 
-
+    public static final Logger logger = LoggerFactory.getLogger(TestDataInserter.class);
+    private final static List<String> datetimeLog = new ArrayList<>();
     private final String keyspace;
     private final String table;
     private final Integer wait_sec;
@@ -28,54 +33,81 @@ public class TestDataInserter {
     }
 
     public void execute() {
-        Timer timer = new Timer();
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                insertTask();
-            }
-        };
-
-        timer.schedule(task, 0, wait_sec * 1000);
-
         try {
+            System.out.println("Start insert test at " + Instant.now());
+
+            Timer timer = new Timer();
+
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.print("Inserting...      ");
+                    System.out.print("\r");
+                    insertTask();
+                    System.out.print("Waiting...        ");
+                    System.out.print("\r");
+                }
+            };
+
+            timer.schedule(task, 0, wait_sec * 1000);
             Thread.sleep(duration_sec * 1000);
+
+            timer.cancel();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
+            System.exit(1);
         }
 
-        timer.cancel();
+        System.out.println("\nComplete Inserting Data.");
     }
 
     private void insertTask() {
 
-        CassandraUtil cassandraUtil = new CassandraUtil(this.keyspace);
+        try {
+            CassandraUtil cassandraUtil = new CassandraUtil(this.keyspace);
 
-        for (int i = 1; i <= record_num; i++) {
             String datetime = getFormattedDatetime();
-            String value = "value_" + i;
-            Instant created = Instant.now();
+            datetimeLog.add(datetime); // datetimeをArrayListに追加
+            logger.info("Insert tasks started at " + datetime);
 
-            // データを挿入
-            // 以下のテーブルを想定
-            // CREATE TABLE IF NOT EXISTS test_ks.test_insert_tb (
-            // datetime TEXT,
-            // value TEXT,
-            // timestamp TIMESTAMP,
-            // PRIMARY KEY ((datetime), value)
-            // ) WITH CLUSTERING ORDER BY (value ASC)
-            // AND compression = {'chunk_length_kb': '64', 'cipher_algorithm':
-            // 'AES/CBC/PKCS5Padding', 'class':
-            // 'org.apache.cassandra.io.compress.EncryptingLZ4Compressor', 'secret_key_strength':
-            // 128, 'system_key_file': 'systemkey_ashono'} ;
+            for (int i = 1; i <= record_num; i++) {
+                String value = "value_" + i;
+                Instant created = Instant.now();
 
-            String insertCql =
-                    "INSERT INTO " + this.table + " (datetime, value, timestamp) VALUES (?, ?, ?)";
-            cassandraUtil.insertData(insertCql, datetime, value, created);
+                // データを挿入
+                // 以下のテーブルを想定
+                // CREATE TABLE IF NOT EXISTS test_ks.test_insert_tb (
+                // datetime TEXT,
+                // value TEXT,
+                // timestamp TIMESTAMP,
+                // PRIMARY KEY ((datetime), value)
+                // ) WITH CLUSTERING ORDER BY (value ASC)
+                // AND compression = {'chunk_length_kb': '64', 'cipher_algorithm':
+                // 'AES/CBC/PKCS5Padding', 'class':
+                // 'org.apache.cassandra.io.compress.EncryptingLZ4Compressor',
+                // 'secret_key_strength':
+                // 128, 'system_key_file': 'systemkey_ashono'} ;
+
+                String insertCql = "INSERT INTO " + this.table
+                        + " (datetime, value, timestamp) VALUES (?, ?, ?)";
+                cassandraUtil.insertData(insertCql, datetime, value, created);
+            }
+
+            logger.info("Insert tasks complete of " + datetime + " partition");
+
+            cassandraUtil.closeSession();
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error(e.toString());
+            System.exit(1);
         }
 
-        cassandraUtil.closeSession();
+
+
+    }
+
+    public static List<String> getDatetimeLog() {
+        return datetimeLog;
     }
 
     // 現在の日時を"yyyy-MM-dd HH:mm:ss"形式で取得
@@ -83,4 +115,6 @@ public class TestDataInserter {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(new Date());
     }
+
+
 }

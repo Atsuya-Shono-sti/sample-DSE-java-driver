@@ -1,12 +1,15 @@
 package com.sios;
 
 import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 import com.datastax.oss.driver.api.core.cql.*;
 
 public class CassandraUtil {
 
+    public static final Logger logger = LoggerFactory.getLogger(CassandraUtil.class);
     private final CqlSession cqlSession;
     File file = new File(App.properties.getProperty("confFilePath"));
 
@@ -18,7 +21,6 @@ public class CassandraUtil {
                             .withKeyspace(keyspace).build();
         } catch (Exception e) {
             // 例外が発生した場合、エラーメッセージを表示して終了
-            e.printStackTrace();
             throw new RuntimeException("Failed to initialize CassandraUtil", e);
         }
     }
@@ -28,7 +30,6 @@ public class CassandraUtil {
             PreparedStatement preparedStatement = cqlSession.prepare(insertCql);
             cqlSession.execute(preparedStatement.bind(bindValues));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Failed to insert data into Cassandra", e);
         }
     }
@@ -39,7 +40,6 @@ public class CassandraUtil {
             SimpleStatement statement = SimpleStatement.newInstance(selectCql);
             return cqlSession.execute(statement);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Failed to execute SELECT query in Cassandra", e);
         }
     }
