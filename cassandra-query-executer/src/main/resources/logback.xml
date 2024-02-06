@@ -11,7 +11,7 @@
     <!-- Appenders -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <!-- ファイルパスに起動時の日時を含める -->
-        <file>logs/testInsert.log</file>
+        <file>logs/testQueryExecute.log</file>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
