@@ -6,10 +6,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.sios</groupId>
-  <artifactId>cassandra-inserter</artifactId>
+  <artifactId>cassandra-query-executer</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>cassandra-inserter</name>
+  <name>cassandra-query-executer</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
@@ -72,7 +72,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.5.2</version>
         <configuration>
-          <finalName>CassandraInserter</finalName>
+          <finalName>CassandraQueryExecuter</finalName>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
