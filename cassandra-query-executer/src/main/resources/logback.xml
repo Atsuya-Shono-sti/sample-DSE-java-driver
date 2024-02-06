@@ -1,0 +1,25 @@
+<!-- logback.xml -->
+<configuration>
+
+    <!-- Appenders -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appenders -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!-- ファイルパスに起動時の日時を含める -->
+        <file>logs/testQueryExecute.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger -->
+    <root level="info">
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>
