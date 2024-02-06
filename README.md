@@ -67,7 +67,7 @@ target/CassandraQueryExecuter.jar が生成される．
   table=test_tb テーブル名
   wait_sec=5 # クエリ実行の感覚(秒)
   record_num=10 # インサートクエリの際1サイクルで挿入する件数
-  duration_sec=60 クエリ実行期間(秒)
+  duration_sec=60 # クエリ実行期間(秒)
   ```
   以上例だと、
   test_ks.test_tb に 60 秒間 5 秒感覚でセレクト、もしくは 10 件のインサートを実行する．
