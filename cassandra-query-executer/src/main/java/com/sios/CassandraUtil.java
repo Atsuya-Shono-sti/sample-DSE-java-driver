@@ -11,7 +11,7 @@ public class CassandraUtil {
 
     public static final Logger logger = LoggerFactory.getLogger(CassandraUtil.class);
     private final CqlSession cqlSession;
-    File file = new File(App.properties.getProperty("confFilePath"));
+    File file = new File(GetResource.properties.getProperty("confFilePath"));
 
     public CassandraUtil(String keyspace) {
         // Cassandraの接続情報を設定

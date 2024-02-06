@@ -20,9 +20,6 @@ public class TestDataInserter {
     private final Integer record_num;
     private final Integer duration_sec;
 
-    /**
-     * 
-     */
     public TestDataInserter(String keyspace, String table, Integer wait_sec, Integer record_num,
             Integer duration_sec) {
         this.keyspace = keyspace;
@@ -49,8 +46,8 @@ public class TestDataInserter {
                 }
             };
 
-            timer.schedule(task, 0, wait_sec * 1000);
-            Thread.sleep(duration_sec * 1000);
+            timer.schedule(task, 0, this.wait_sec * 1000);
+            Thread.sleep(this.duration_sec * 1000);
 
             timer.cancel();
         } catch (InterruptedException e) {
@@ -101,18 +98,15 @@ public class TestDataInserter {
             logger.error(e.toString());
             System.exit(1);
         }
-
-
-
     }
 
     public static List<String> getDatetimeLog() {
         return datetimeLog;
     }
 
-    // 現在の日時を"yyyy-MM-dd HH:mm:ss"形式で取得
+    // 現在の日時を"yyyyMMddHH"形式で取得
     private static String getFormattedDatetime() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHH");
         return dateFormat.format(new Date());
     }
 

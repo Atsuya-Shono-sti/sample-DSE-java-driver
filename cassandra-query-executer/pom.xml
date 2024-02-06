@@ -77,11 +77,11 @@
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
           <appendAssemblyId>false</appendAssemblyId>
-          <archive>
+          <!-- <archive>
             <manifest>
-              <mainClass>com.sios.App</mainClass>
+              <mainClass>com.sios.InsertApp</mainClass>
             </manifest>
-          </archive>
+          </archive> -->
         </configuration>
         <executions>
           <execution>

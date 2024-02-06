@@ -8,15 +8,10 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!-- ファイルパスに日付と時刻を含める -->
+    <!-- Appenders -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!-- ファイルパスに起動時の日時を含める -->
         <file>logs/testInsert.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- ログローテーションの基準は日付と時刻 -->
-            <fileNamePattern>logs/testInsert_%d{yyyyMMddHHmm}.log</fileNamePattern>
-            <!-- 最大バックアップインデックス -->
-            <maxHistory>10</maxHistory>
-        </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>

@@ -7,13 +7,12 @@ import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class App {
+public class GetResource {
 
-    public static final Logger logger = LoggerFactory.getLogger(App.class);
+    public static final Logger logger = LoggerFactory.getLogger(GetResource.class);
     public static Properties properties = new Properties();
 
-    public static void main(String[] args) {
-
+    public GetResource(String[] args) {
         // コマンドラインオプションの定義
         Options options = new Options();
         options.addOption("p", "properties-file", true, "Path to properties file");
@@ -49,22 +48,5 @@ public class App {
             logger.error("Error parsing command line options: " + e.getMessage());
             System.exit(1);
         }
-        // 読み込んだプロパティを表示
-        logger.info("Value of 'confFilePath': " + properties.getProperty("confFilePath"));
-        logger.info("Value of 'keyspace': " + properties.getProperty("keyspace"));
-        logger.info("Value of 'table': " + properties.getProperty("table"));
-        logger.info("Value of 'wait_sec': " + properties.getProperty("wait_sec"));
-        logger.info("Value of 'record_num': " + properties.getProperty("record_num"));
-        logger.info("Value of 'duration_sec': " + properties.getProperty("duration_sec"));
-
-        new TestDataInserter(properties.getProperty("keyspace"), properties.getProperty("table"),
-                Integer.parseInt(properties.getProperty("wait_sec")),
-                Integer.parseInt(properties.getProperty("record_num")),
-                Integer.parseInt(properties.getProperty("duration_sec"))).execute();
-
-        new Evaluator(properties.getProperty("keyspace"), properties.getProperty("table"))
-                .execute();
-        // プログラムの終了
-        System.exit(0);
     }
 }
